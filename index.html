@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo de Bebidas</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Roboto,sans-serif}
+body{background:#000;color:#fff;scroll-behavior:smooth}
+
+header{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  border-bottom:3px solid #ffcc00;
+}
+header img{height:80px}
+
+.toggle-menu{
+  position:fixed;
+  left:10px;
+  top:15px;
+  background:#ffcc00;
+  color:#000;
+  border:none;
+  padding:10px 14px;
+  font-weight:bold;
+  border-radius:6px;
+  cursor:pointer;
+  z-index:999
+}
+
+.menu{
+  position:fixed;
+  left:0;
+  top:0;
+  width:200px;
+  height:100%;
+  background:#000;
+  border-right:3px solid #ffcc00;
+  padding:15px;
+  overflow-y:auto;
+  transition:.3s
+}
+.menu.fechado{transform:translateX(-100%)}
+
+.menu h3{color:#ffcc00;margin-bottom:10px;text-align:center}
+.menu a{
+  display:block;
+  color:#ffcc00;
+  text-decoration:none;
+  padding:8px 0;
+  border-bottom:1px solid #222;
+  font-size:14px
+}
+
+.fechar-menu{
+  width:100%;
+  background:#ffcc00;
+  color:#000;
+  border:none;
+  padding:8px;
+  margin-bottom:10px;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer
+}
+
+.container{
+  padding:20px;
+  margin-left:220px;
+  transition:.3s
+}
+.container.menu-fechado{margin-left:20px}
+
+.produtos{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:50px;
+  justify-items:center;
+}
+
+.categoria{margin-bottom:50px}
+.categoria h2{
+  color:#ffcc00;
+  border-bottom:2px solid #ffcc00;
+  margin-bottom:20px;
+  padding-bottom:5px
+}
+
+.produto{
+  background:#fff;
+  color:#000;
+  border-radius:12px;
+  padding:15px;
+  text-align:center;
+  width:220px;
+  margin:0 auto;
+}
+
+.produto img{
+  width:200px;
+  height:150px;
+  object-fit:contain
+}
+
+.produto h3{font-size:16px;margin:8px 0}
+
+.controls{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  margin:10px 0
+}
+
+.controls button{
+  width:35px;
+  height:35px;
+  border:none;
+  border-radius:6px;
+  font-size:18px;
+  cursor:pointer;
+  font-weight:bold
+}
+
+.btn-add{background:#1faa00;color:#fff}
+.btn-remove{background:#c70000;color:#fff}
+.qtd{width:40px;text-align:center;font-weight:bold}
+
+.cart{
+  position:fixed;
+  right:20px;
+  top:20px;
+  background:#222;
+  border:2px solid #ffcc00;
+  padding:15px;
+  width:260px;
+  border-radius:10px
+}
+
+.cart h3{text-align:center;margin-bottom:10px}
+.cart-total{text-align:center;font-size:18px;margin-bottom:10px}
+
+.cart button{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border:none;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer
+}
+
+.finalizar{background:#1faa00;color:#fff}
+.limpar{background:#c70000;color:#fff}
+
+/* 🔹 TEXTO DO FARDO (NÃO ALTERA LAYOUT) */
+.fardo{
+  font-size:12px;
+  color:#333;
+  margin-top:4px;
+}
+</style>
+</head>
+
+<body>
+
+<button class="toggle-menu" onclick="toggleMenu()">☰ Categorias</button>
+
+<header>
+  <img src="assets/logo1.png">
+</header>
+
+<div class="menu fechado" id="menu">
+<button class="fechar-menu" onclick="toggleMenu()">✕ Fechar</button>
+<h3>Categorias</h3>
+<a href="#cocacola">Refrigerante Coca-Cola</a>
+<a href="#antartica-refri">Refrigerante Antarctica</a>
+<a href="#fanta">Fanta / Kuat / Schweppes</a>
+<a href="#pepsi">Pepsi</a>
+<a href="#diversos">Refrigerantes Diversos</a>
+<a href="#isotonicos">Isotônicos</a>
+<a href="#energeticos">Energéticos</a>
+<a href="#agua">Água / Sucos</a>
+<a href="#cervejas-ant">Cervejas Antarctica</a>
+<a href="#becks">Cervejas Becks</a>
+<a href="#heineken">Cervejas Heineken</a>
+<a href="#bud">Cervejas Budweiser</a>
+<a href="#skol">Cervejas Skol</a>
+<a href="#brahma">Cervejas Brahma</a>
+<a href="#bohemia">Cerveja Bohemia</a>
+<a href="#itaipava">Cerveja Itaipava</a>
+<a href="#polar">Cervejas Polar</a>
+<a href="#schin">Cervejas Schin</a>
+<a href="#kaiser">Cervejas Kaiser</a>
+<a href="#imperio">Cervejas Império</a>
+<a href="#amstel">Cervejas Amstel</a>
+<a href="#cervejas-div">Cervejas Diversas</a>
+<a href="#chopp">Chopp Barril</a>
+<a href="#destilados">Destilados / Ices</a>
+</div>
+
+<div class="cart">
+  <h3>Carrinho</h3>
+  <div class="cart-total" id="cartTotal">Total: R$ 0,00</div>
+	  <button class="finalizar" onclick="finalizarPedido()">Finalizar Pedido</button>
+  <button class="limpar" onclick="limparCarrinho()">Limpar</button>
+</div>
+
+<div class="container" id="container">
+
+<section class="categoria" id="cocacola"><h2>Refrigerante Coca-Cola</h2></section>
+<section class="categoria" id="antartica-refri"><h2>Refrigerante Antarctica</h2></section>
+<section class="categoria" id="fanta"><h2>Fanta / Kuat / Schweppes</h2></section>
+<section class="categoria" id="pepsi"><h2>Pepsi</h2></section>
+<section class="categoria" id="diversos"><h2>Refrigerantes Diversos</h2></section>
+<section class="categoria" id="isotonicos"><h2>Isotônicos</h2></section>
+<section class="categoria" id="energeticos"><h2>Energéticos</h2></section>
+<section class="categoria" id="agua"><h2>Água / Sucos</h2></section>
+<section class="categoria" id="cervejas-ant"><h2>Cervejas Antarctica</h2></section>
+<section class="categoria" id="becks"><h2>Cervejas Becks</h2></section>
+<section class="categoria" id="heineken"><h2>Cervejas Heineken</h2></section>
+<section class="categoria" id="bud"><h2>Cervejas Budweiser</h2></section>
+<section class="categoria" id="skol"><h2>Cervejas Skol</h2></section>
+<section class="categoria" id="brahma"><h2>Cervejas Brahma</h2></section>
+<section class="categoria" id="bohemia"><h2>Cerveja Bohemia</h2></section>
+<section class="categoria" id="itaipava"><h2>Cerveja Itaipava</h2></section>
+<section class="categoria" id="polar"><h2>Cervejas Polar</h2></section>
+<section class="categoria" id="schin"><h2>Cervejas Schin</h2></section>
+<section class="categoria" id="kaiser"><h2>Cervejas Kaiser</h2></section>
+<section class="categoria" id="imperio"><h2>Cervejas Império</h2></section>
+<section class="categoria" id="amstel"><h2>Cervejas Amstel</h2></section>
+<section class="categoria" id="cervejas-div"><h2>Cervejas Diversas</h2></section>
+<section class="categoria" id="chopp"><h2>Chopp Barril</h2></section>
+<section class="categoria" id="destilados"><h2>Destilados / Ices</h2></section>
+
+</div>
+
+<script>
+let carrinho = {};
+let catalogo = JSON.parse(localStorage.getItem('pokasbebidas_catalogo')) || {};
+
+function iniciarCatalogo(){
+  for(const [categoria,produtos] of Object.entries(catalogo)){
+    const section=document.getElementById(categoria);
+    if(!section)continue;
+    const grid=document.createElement('div');
+    grid.className='produtos';
+    section.appendChild(grid);
+
+    produtos.forEach((p,i)=>{
+      const id=`${categoria}-${i}`;
+      grid.innerHTML+=`
+      <div class="produto" data-id="${id}" data-preco="${p.preco}" data-nome="${p.nome}">
+        <img src="${p.imagem}">
+        <h3>${p.nome}</h3>
+        <p>R$ ${p.preco.toFixed(2)}</p>
+        ${p.fardo ? `<div class="fardo">Fardo com ${p.fardo} unidades</div>` : ``}
+        <div class="controls">
+          <button class="btn-remove" onclick="remover('${id}')">−</button>
+          <div class="qtd" id="qtd-${id}">0</div>
+          <button class="btn-add" onclick="adicionar('${id}')">+</button>
+        </div>
+      </div>`;
+    });
+  }
+}
+iniciarCatalogo();
+
+function adicionar(id){
+  const p=document.querySelector(`[data-id="${id}"]`);
+  if(!carrinho[id])carrinho[id]={nome:p.dataset.nome,preco:+p.dataset.preco,qtd:0};
+  carrinho[id].qtd++; atualizar();
+}
+function remover(id){
+  if(carrinho[id]){carrinho[id].qtd--;if(carrinho[id].qtd<=0)delete carrinho[id]}
+  atualizar();
+}
+function atualizar(){
+  let total=0;
+  document.querySelectorAll('.qtd').forEach(q=>q.innerText=0);
+  for(const id in carrinho){
+    document.getElementById('qtd-'+id).innerText=carrinho[id].qtd;
+    total+=carrinho[id].preco*carrinho[id].qtd;
+  }
+  document.getElementById('cartTotal').innerText='Total: R$ '+total.toFixed(2);
+}
+function limparCarrinho(){carrinho={};atualizar();}
+function toggleMenu(){
+	  menu.classList.toggle('fechado');
+	  container.classList.toggle('menu-fechado');
+	}
+
+function finalizarPedido(){
+  const itens = Object.values(carrinho);
+  if(itens.length === 0){
+    alert('Seu carrinho está vazio!');
+    return;
+  }
+
+  const zap = localStorage.getItem('pokasbebidas_whatsapp');
+  if(!zap){
+    alert('Erro: O número de WhatsApp não foi configurado pelo administrador.');
+    return;
+  }
+
+  let texto = 'Olá! Gostaria de fazer o seguinte pedido:\n\n';
+  let total = 0;
+  itens.forEach(item => {
+    texto += `• ${item.qtd}x ${item.nome} - R$ ${(item.preco * item.qtd).toFixed(2)}\n`;
+    total += item.preco * item.qtd;
+  });
+  texto += `\n*Total: R$ ${total.toFixed(2)}*`;
+
+  const url = `https://api.whatsapp.com/send?phone=${zap}&text=${encodeURIComponent(texto)}`;
+  window.open(url, '_blank');
+}
+</script>
+
+</body>
+</html>

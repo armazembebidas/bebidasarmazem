@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin - Pokas Bebidas</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Roboto,sans-serif}
+  body{background:#111;color:#fff;padding:20px}
+  
+  h1{color:#ffcc00;text-align:center;margin-bottom:20px;border-bottom:2px solid #ffcc00;padding-bottom:10px}
+  
+  .container{max-width:800px;margin:0 auto}
+  
+  .form-group{background:#222;padding:20px;border-radius:10px;margin-bottom:20px;border:1px solid #333}
+  .form-group h3{margin-bottom:15px;color:#ffcc00}
+  
+  label{display:block;margin-bottom:5px;font-weight:bold}
+  input, select{width:100%;padding:10px;margin-bottom:15px;border-radius:5px;border:1px solid #444;background:#000;color:#fff}
+  
+  button{padding:12px 20px;border:none;border-radius:5px;font-weight:bold;cursor:pointer;font-size:16px;width:100%}
+  .btn-save{background:#1faa00;color:#fff;margin-top:10px}
+  .btn-save:hover{background:#168000}
+  
+  .btn-delete{background:#c70000;color:#fff;width:auto;padding:5px 10px;font-size:12px}
+  
+  .lista-produtos{margin-top:30px}
+  .item-produto{background:#222;padding:10px;margin-bottom:10px;border-radius:5px;display:flex;justify-content:space-between;align-items:center;border-left:4px solid #ffcc00}
+  .item-info{display:flex;flex-direction:column}
+  .item-cat{font-size:12px;color:#aaa}
+  
+  .aviso{background:#333;color:#ffcc00;padding:10px;border-radius:5px;margin-bottom:20px;font-size:14px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Painel Administrativo</h1>
+  
+  <div class="aviso">
+    ⚠️ <strong>Atenção:</strong> Use imagens leves/pequenas para não encher a memória do navegador.
+  </div>
+
+  <div class="form-group">
+    <h3>Configurações de WhatsApp</h3>
+    <label>Número do WhatsApp (com DDD, apenas números):</label>
+    <input type="text" id="whatsappNumero" placeholder="Ex: 5511999999999">
+    <div style="display: flex; gap: 10px;">
+      <button class="btn-save" onclick="salvarWhatsApp()">Salvar Número</button>
+      <button class="btn-delete" style="width: 100%; height: 42px; margin-top: 10px;" onclick="removerWhatsApp()">Remover Número</button>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <h3>Adicionar / Editar Produto</h3>
+    
+    <label>Categoria:</label>
+    <select id="categoria">
+      <option value="cocacola">Refrigerante Coca-Cola</option>
+      <option value="antartica-refri">Refrigerante Antarctica</option>
+      <option value="fanta">Fanta / Kuat / Schweppes</option>
+      <option value="pepsi">Pepsi</option>
+      <option value="diversos">Refrigerantes Diversos</option>
+      <option value="isotonicos">Isotônicos</option>
+      <option value="energeticos">Energéticos</option>
+      <option value="agua">Água / Sucos</option>
+      <option value="cervejas-ant">Cervejas Antarctica</option>
+      <option value="becks">Cervejas Becks</option>
+      <option value="heineken">Cervejas Heineken</option>
+      <option value="bud">Cervejas Budweiser</option>
+      <option value="skol">Cervejas Skol</option>
+      <option value="brahma">Cervejas Brahma</option>
+      <option value="bohemia">Cerveja Bohemia</option>
+      <option value="itaipava">Cerveja Itaipava</option>
+      <option value="polar">Cervejas Polar</option>
+      <option value="schin">Cervejas Schin</option>
+      <option value="kaiser">Cervejas Kaiser</option>
+      <option value="imperio">Cervejas Império</option>
+      <option value="amstel">Cervejas Amstel</option>
+      <option value="cervejas-div">Cervejas Diversas</option>
+      <option value="chopp">Chopp Barril</option>
+      <option value="destilados">Destilados / Ices</option>
+    </select>
+
+    <label>Nome do Produto:</label>
+    <input type="text" id="nomeProduto" placeholder="Ex: Coca-Cola 2L">
+
+    <label>Foto do Produto:</label>
+    <input type="file" id="fotoInput" accept="image/*">
+
+    <label>Preço (R$):</label>
+    <input type="number" id="preco" step="0.01" placeholder="0.00">
+
+    <label>Quantidade no Fardo:</label>
+    <input type="number" id="fardo" placeholder="Ex: 12">
+
+    <label>Unidade de Venda:</label>
+    <select id="unidade">
+      <option value="unidade">Unidade</option>
+      <option value="fardo">Fardo</option>
+    </select>
+
+    <button class="btn-save" onclick="adicionarProduto()">Salvar Produto</button>
+  </div>
+
+  <div class="lista-produtos">
+    <h3>Produtos Cadastrados</h3>
+    <div id="lista"></div>
+  </div>
+  
+  <br>
+  <button onclick="resetarFabrica()" style="background:#555; margin-top:20px">Restaurar Padrão de Fábrica</button>
+  <br><br>
+  <a href="index.html" style="color:#ffcc00; text-align:center; display:block">Voltar para o Site</a>
+</div>
+
+<script>
+const padrao = {
+  "cocacola": [],
+  "antartica-refri": [], "fanta": [], "pepsi": [], "diversos": [], "isotonicos": [],
+  "energeticos": [], "agua": [], "cervejas-ant": [], "becks": [], "heineken": [],
+  "bud": [], "skol": [], "brahma": [], "bohemia": [], "itaipava": [], "polar": [],
+  "schin": [], "kaiser": [], "imperio": [], "amstel": [], "cervejas-div": [],
+  "chopp": [], "destilados": []
+};
+
+let catalogo = {};
+
+function carregarDados() {
+  const salvo = localStorage.getItem('pokasbebidas_catalogo');
+  catalogo = salvo ? JSON.parse(salvo) : JSON.parse(JSON.stringify(padrao));
+  
+  const zap = localStorage.getItem('pokasbebidas_whatsapp');
+  if(zap) document.getElementById('whatsappNumero').value = zap;
+  
+  renderizarLista();
+}
+
+function salvarWhatsApp() {
+  const num = document.getElementById('whatsappNumero').value.trim().replace(/\D/g, '');
+  if(!num) {
+    alert('Por favor, insira um número válido.');
+    return;
+  }
+  localStorage.setItem('pokasbebidas_whatsapp', num);
+  alert('Número de WhatsApp salvo com sucesso!');
+}
+
+function removerWhatsApp() {
+  if(confirm('Deseja remover o número de WhatsApp?')) {
+    localStorage.removeItem('pokasbebidas_whatsapp');
+    document.getElementById('whatsappNumero').value = '';
+    alert('Número removido!');
+  }
+}
+
+function salvarDados() {
+  localStorage.setItem('pokasbebidas_catalogo', JSON.stringify(catalogo));
+  renderizarLista();
+}
+
+function adicionarProduto() {
+  const cat = categoria.value;
+  const nome = nomeProduto.value.trim();
+  const preco = parseFloat(document.getElementById('preco').value);
+  const fardo = parseInt(document.getElementById('fardo').value) || 1;
+  const unidade = document.getElementById('unidade').value;
+  const foto = fotoInput.files[0];
+
+  if (!nome || !foto || isNaN(preco)) return;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    catalogo[cat].push({
+      nome,
+      preco,
+      fardo,
+      unidade,
+      imagem: e.target.result
+    });
+    salvarDados();
+    nomeProduto.value = preco.value = fardo.value = fotoInput.value = '';
+  };
+  reader.readAsDataURL(foto);
+}
+
+function removerProduto(cat, index) {
+  if(confirm('Remover este produto?')) {
+    catalogo[cat].splice(index, 1);
+    salvarDados();
+  }
+}
+
+function renderizarLista() {
+  lista.innerHTML = '';
+  for (const cat in catalogo) {
+    catalogo[cat].forEach((p, i) => {
+      lista.innerHTML += `
+        <div class="item-produto">
+          <div class="item-info">
+            <strong>${p.nome}</strong>
+            <span class="item-cat">R$ ${p.preco.toFixed(2)} | ${p.unidade} (${p.fardo})</span>
+          </div>
+          <button class="btn-delete" onclick="removerProduto('${cat}',${i})">Excluir</button>
+        </div>
+      `;
+    });
+  }
+}
+
+function resetarFabrica() {
+  if(confirm('Restaurar padrão de fábrica?')) {
+    localStorage.removeItem('pokasbebidas_catalogo');
+    location.reload();
+  }
+}
+
+carregarDados();
+</script>
+
+</body>
+</html>
